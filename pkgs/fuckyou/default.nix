@@ -1,22 +1,18 @@
-with import <nixpkgs> {};
-callPackage ({stdenvNoCC, fetchurl, makeWrapper, lib}:
-  stdenvNoCC.mkDerivation{
-    pname = "fuckyou";
-    version = "1.0.1";
+{ stdenvNoCC, fetchurl, makeWrapper, lib }:
 
-    src = fetchurl {
-      url = "https://github.com/Anon4You/FuckYou/raw/main/fuckyou.sh";
-      hash = "sha256-KPGQ5XQX//U3JpnNyz/7MgXfG3ORe0MiJi3hLnYm0U8=";
-    };
-
-    nativeBuildInputs = [makeWrapper];
-    dontUnpack = true;
-
-    installPhase = ''
+stdenvNoCC.mkDerivation {
+  pname = "fuckyou";
+  version = "1.0.1";
+  src = fetchurl {
+    url = "https://raw.githubusercontent.com/Anon4You/FuckYou/refs/heads/main/fuckyou.sh";
+    hash = "sha256-KPGQ5XQX//U3JpnNyz/7MgXfG3ORe0MiJi3hLnYm0U8=";
+  };
+  nativeBuildInputs = [ makeWrapper ];
+  dontUnpack = true;
+  installPhase = ''
     mkdir -p $out/bin
-    cp $src $out/bin/$pname
-    chmod +x $out/bin/$pname
-    wrapProgram $out/bin/$pname --prefix PATH : ${lib.makeBinPath []}
-    '';
-  }
-){}
+    cp $src $out/bin/${pname}
+    chmod +x $out/bin/${pname}
+    wrapProgram $out/bin/${pname} --prefix PATH : ${lib.makeBinPath []}
+  '';
+}
