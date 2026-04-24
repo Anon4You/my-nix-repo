@@ -11,8 +11,8 @@ stdenvNoCC.mkDerivation {
   dontUnpack = true;
   installPhase = ''
     mkdir -p $out/bin
-    cp $src $out/bin/${pname}
-    chmod +x $out/bin/${pname}
-    wrapProgram $out/bin/${pname} --prefix PATH : ${lib.makeBinPath []}
+    cp $src $out/bin/fuckyou
+    chmod +x $out/bin/fuckyou
+    wrapProgram $out/bin/fuckyou --prefix PATH : ${lib.makeBinPath []}
   '';
 }
