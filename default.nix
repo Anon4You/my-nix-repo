@@ -2,14 +2,16 @@
 
 let
   pkgDirs = builtins.readDir ./pkgs;
+  # List of names that are directories and contain default.nix
+  pkgNames = builtins.filter (name:
+    let t = pkgDirs.${name}; in
+    t == "directory" && builtins.pathExists (./pkgs + "/${name}/default.nix")
+  ) (builtins.attrNames pkgDirs);
   
-  isPackage = name: type:
-    type == "directory" && builtins.pathExists (./pkgs + "/${name}/default.nix");
-  
-  packageNames = builtins.attrNames (builtins.filterAttrs isPackage pkgDirs);
-  
+  # Build attr set from list
+  result = builtins.listToAttrs (map (name: {
+    inherit name;
+    value = pkgs.callPackage (./pkgs + "/${name}/default.nix") { };
+  }) pkgNames);
 in
-builtins.listToAttrs (map (name: {
-  inherit name;
-  value = pkgs.callPackage (./pkgs + "/${name}/default.nix") { };
-}) packageNames)
+result
